@@ -1,14 +1,17 @@
 package com.pustovit.pendintservice
 
-val TAG = "myLogs"
+const val TAG = "myLogs"
 
-val TASK1_CODE = 1
-val TASK2_CODE = 2
-val TASK3_CODE = 3
+const val BROADCAST_ACTION = "ru.startandroid.develop.p0961servicebackbroadcast"
+const val TASK1_CODE = 1
+const val TASK2_CODE = 2
+const val TASK3_CODE = 3
 
-val STATUS_START = 100
-val STATUS_FINISH = 200
+const val STATUS_START = 100
+const val STATUS_FINISH = 200
 
-val PARAM_TIME = "time"
-val PARAM_PINTENT = "pendingIntent"
-val PARAM_RESULT = "result"
+const val PARAM_TIME = "time"
+const val PARAM_PINTENT = "pendingIntent"
+const val PARAM_RESULT = "result"
+const val PARAM_TASK = "task"
+const val PARAM_STATUS = "status"

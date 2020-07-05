@@ -1,6 +1,5 @@
 package com.pustovit.pendintservice
 
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
@@ -23,10 +22,10 @@ class MyService : Service() {
         readFlags(flags)
         serviceCoroutineScope.launch {
             if (intent != null) {
-                val time: Int = intent.getIntExtra(PARAM_TIME, 0)
-                val pi: PendingIntent = intent.getParcelableExtra(PARAM_PINTENT)
+                val time: Int = intent.getIntExtra(PARAM_TIME, 1)
+                val task: Int = intent.getIntExtra(PARAM_TASK, 0)
 
-                serviceDoSomething(startId, time, pi)
+                serviceDoSomething(startId, time, task)
 
             }
         }
@@ -41,18 +40,25 @@ class MyService : Service() {
             Log.d(TAG, "START_FLAG_RETRY")
     }
 
-    private suspend fun serviceDoSomething(startId: Int, time: Int, pendingIntent: PendingIntent) {
+    private suspend fun serviceDoSomething(startId: Int, time: Int, task: Int) {
         withContext(Dispatchers.IO) {
-            Log.i(TAG, "Work start: startId = $startId")
+            Log.i(TAG, "Work start: startId = $startId, task = $task, time = $time")
             try {
-                pendingIntent.send(STATUS_START)
+                val intent: Intent = Intent(BROADCAST_ACTION)
+
+                // сообщаем о старте задачи
+                intent.putExtra(PARAM_TASK, task);
+                intent.putExtra(PARAM_STATUS, STATUS_START);
+                sendBroadcast(intent);
+
+
                 TimeUnit.SECONDS.sleep(time.toLong())
 
-                // сообщаем об окончании задачи
 
                 // сообщаем об окончании задачи
-                val intent = Intent().putExtra(PARAM_RESULT, time * 100)
-                pendingIntent.send(this@MyService, STATUS_FINISH, intent)
+                intent.putExtra(PARAM_STATUS, STATUS_FINISH)
+                intent.putExtra(PARAM_RESULT, time * 100)
+                sendBroadcast(intent)
 
             } catch (e: InterruptedException) {
                 e.printStackTrace()
